@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Mission11_Elizalde.Data
+namespace Mission12_Elizalde.Data
 {
     public class BookDbContext : DbContext
     {

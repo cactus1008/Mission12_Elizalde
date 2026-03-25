@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Mission11_Elizalde.Data
+namespace Mission12_Elizalde.Data
 {
     public class Book
     {

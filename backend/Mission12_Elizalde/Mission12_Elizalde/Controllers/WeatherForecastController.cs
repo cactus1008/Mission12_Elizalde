@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Mission11_Elizalde.Controllers
+namespace Mission12_Elizalde.Controllers
 {
     [ApiController]
     [Route("[controller]")]
