@@ -17,19 +17,15 @@ namespace Mission12_Elizalde.Controllers
 
         [HttpGet]
         // Take in page size, page number, and sort order as query parameters
-        public IActionResult Get(int pageSize = 5, int pageNum = 1, string sort = "none")
+        public IActionResult Get(int pageSize = 5, int pageNum = 1, [FromQuery] List<string>? bookTypes = null)
         {
             // Make sure i can sort by title in both ascending and descending order
             var query = _context.Books.AsQueryable();
 
             // Sorting logic
-            if (sort == "title_asc")
+            if (bookTypes != null && bookTypes.Any())
             {
-                query = query.OrderBy(b => b.Title);
-            }
-            else if (sort == "title_desc")
-            {
-                query = query.OrderByDescending(b => b.Title);
+                query = query.Where(b => bookTypes.Contains(b.Category));
             }
 
             // Get the total count of books before pagination
@@ -49,6 +45,12 @@ namespace Mission12_Elizalde.Controllers
             };
 
             return Ok(listInfo);
+        }
+
+        [HttpGet("GetBookTypes")]
+        public IActionResult GetBookTypes() { 
+            var bookTypes = _context.Books.Select(b => b.Category).Distinct().ToList();
+            return Ok(bookTypes);
         }
     }
 }

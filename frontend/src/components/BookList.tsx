@@ -1,45 +1,52 @@
-import type { Book } from './types/Book';
+import type { Book } from '../types/Book';
 import { useState, useEffect } from 'react';
+import type { CartItem } from "../types/CartItem";
+import { useCart } from "../context/CartContext";
+import { useNavigate } from 'react-router-dom';
 
-function BookList() {
+function BookList({selectedCategories} : {selectedCategories: string[];}) {
+
+    const navigate = useNavigate();
+    const {addToCart} = useCart();
 
     const [books, setBooks] = useState<Book[]>([]);
     const [pageSize, setPageSize] = useState<number>(5);
     const [pageNum, setPageNum] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(0);
-    const [sortOrder, setSortOrder] = useState<string>("none");
+    const [quantity, setQuantity] = useState<number>(1);
+
+    const handleAddToCart = (b: Book) => {
+        const newItem: CartItem = {
+            bookID: b.bookID,
+            title: b.title,
+            price: b.price,
+            quantity: quantity
+        };
+
+        addToCart(newItem);
+        navigate('/cart');
+    }
+
+    useEffect(() => {
+        setPageNum(1);
+    }, [selectedCategories]);
 
     useEffect(() => {
         const fetchBooks = async () => {
-            const response = await fetch(`http://localhost:5210/Book?pageSize=${pageSize}&pageNum=${pageNum}&sort=${sortOrder}`);
+            const categoryParams = selectedCategories.map((cat) => `bookTypes=${encodeURIComponent(cat)}`).join('&');
+            const response = await fetch(`http://localhost:5210/Book?pageSize=${pageSize}&pageNum=${pageNum}${selectedCategories.length ? `&${categoryParams}` : ''}`);
             const data = await response.json();
             setBooks(data.booksList);
             setTotalPages(Math.ceil(data.totalBooks / pageSize));
         }
         fetchBooks();
-    }, [pageSize, pageNum, sortOrder]);
+    }, [pageSize, pageNum, selectedCategories]);
 
     return (
     <>
     <br />
     <h3>Book List</h3>
     <div className="row justify-content-center mb-4">
-        <div className="col-md-4">
-            <label className="form-label fw-bold">Sort by:</label>
-            <select
-                className="form-select form-select-sm"
-                value={sortOrder}
-                onChange={(e) => {
-                    setSortOrder(e.target.value);
-                    setPageNum(1);
-                }}
-            >
-                <option value="none">None</option>
-                <option value="title_asc">Title A to Z</option>
-                <option value="title_desc">Title Z to A</option>
-            </select>
-        </div>
-
         <div className="col-md-4">
             <label className="form-label fw-bold">Results per page:</label>
             <select
@@ -70,6 +77,9 @@ function BookList() {
             <li><strong>Page Count:</strong> {b.pageCount}</li>
             <li><strong>Price:</strong> ${b.price}</li>
         </ul>
+        <br />
+        <input type="number" placeholder="Quantity" value={quantity} onChange={(x) => setQuantity(Number(x.target.value))}/>
+        <button onClick={() => handleAddToCart(b)}>Add to cart</button>
         </div>
     </div>
     ))}
