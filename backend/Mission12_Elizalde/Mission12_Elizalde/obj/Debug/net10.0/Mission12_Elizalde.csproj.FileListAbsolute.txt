@@ -147,3 +147,4 @@ C:\Users\joaqu\Documents\IS Junior Core\Current\IS413\Codes\Mission12_Elizalde\b
 C:\Users\joaqu\Documents\IS Junior Core\Current\IS413\Codes\Mission12_Elizalde\backend\Mission12_Elizalde\Mission12_Elizalde\obj\Debug\net10.0\Mission12_Elizalde.pdb
 C:\Users\joaqu\Documents\IS Junior Core\Current\IS413\Codes\Mission12_Elizalde\backend\Mission12_Elizalde\Mission12_Elizalde\obj\Debug\net10.0\Mission12_Elizalde.genruntimeconfig.cache
 C:\Users\joaqu\Documents\IS Junior Core\Current\IS413\Codes\Mission12_Elizalde\backend\Mission12_Elizalde\Mission12_Elizalde\obj\Debug\net10.0\ref\Mission12_Elizalde.dll
+C:\Users\joaqu\Documents\IS Junior Core\Current\IS413\Codes\Mission12_Elizalde\backend\Mission12_Elizalde\Mission12_Elizalde\bin\Debug\net10.0\Bookstore.sqlite
