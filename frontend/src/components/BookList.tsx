@@ -3,21 +3,26 @@ import { useState, useEffect } from 'react';
 import type { CartItem } from '../types/CartItem';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import { fetchBooks } from '../api/BooksAPI';
+import Pagination from './Pagination';
 
 function BookList({
   selectedCategories,
-  pageSize,
 }: {
   selectedCategories: string[];
-  pageSize: number;
 }) {
   const navigate = useNavigate();
   const { addToCart } = useCart();
 
   const [books, setBooks] = useState<Book[]>([]);
+  const [pageSize, setPageSize] = useState<number>(10);
   const [pageNum, setPageNum] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  
+
 
   const handleAddToCart = (b: Book) => {
     const selectedQuantity = quantities[b.bookID] || 1;
@@ -43,24 +48,25 @@ function BookList({
   }, [selectedCategories, pageSize]);
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      const categoryParams = selectedCategories
-        .map((cat) => `bookTypes=${encodeURIComponent(cat)}`)
-        .join('&');
+    const loadBooks = async () => {
 
-      const response = await fetch(
-        `http://localhost:5210/Book?pageSize=${pageSize}&pageNum=${pageNum}${
-          selectedCategories.length ? `&${categoryParams}` : ''
-        }`
-      );
-
-      const data = await response.json();
-      setBooks(data.booksList);
-      setTotalPages(Math.ceil(data.totalBooks / pageSize));
+      try {
+        setLoading(true);
+        const data = await fetchBooks(pageSize, pageNum, selectedCategories);
+        setBooks(data.booksList);
+        setTotalPages(Math.ceil(data.totalBooks / pageSize));
+      } catch (err) {
+        setError('Failed to load books. Please try again later.');
+      } finally {
+        setLoading(false);
+      };
     };
-
-    fetchBooks();
-  }, [pageSize, pageNum, selectedCategories]);
+    loadBooks();
+    }, [pageSize, pageNum, selectedCategories]
+  );
+  
+    if (loading) return <div>Loading books...</div>;
+    if (error) return <div className='alert alert-danger'>Error: {error}</div>;
 
   return (
     <>
@@ -131,43 +137,16 @@ function BookList({
           </div>
         </div>
       ))}
-
-      <nav className='mt-4'>
-        <ul className='pagination justify-content-center flex-wrap'>
-          <li className={`page-item ${pageNum === 1 ? 'disabled' : ''}`}>
-            <button
-              className='page-link'
-              onClick={() => setPageNum(pageNum - 1)}
-              disabled={pageNum === 1}
-            >
-              Previous
-            </button>
-          </li>
-
-          {[...Array(totalPages)].map((_, i) => (
-            <li
-              className={`page-item ${pageNum === i + 1 ? 'active' : ''}`}
-              key={i + 1}
-            >
-              <button className='page-link' onClick={() => setPageNum(i + 1)}>
-                {i + 1}
-              </button>
-            </li>
-          ))}
-
-          <li
-            className={`page-item ${pageNum === totalPages ? 'disabled' : ''}`}
-          >
-            <button
-              className='page-link'
-              onClick={() => setPageNum(pageNum + 1)}
-              disabled={pageNum === totalPages}
-            >
-              Next
-            </button>
-          </li>
-        </ul>
-      </nav>
+      <Pagination
+        currentPage={pageNum}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        onPageChange={setPageNum}
+        onPageSizeChange={(newSize) => {
+            setPageSize(newSize);
+            setPageNum(1);
+        }}
+      />
     </>
   );
 }
