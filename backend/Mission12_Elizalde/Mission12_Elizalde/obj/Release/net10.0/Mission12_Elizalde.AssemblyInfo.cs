@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Mission12_Elizalde")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+240e6ce54fa4bf53830040bd1f974e41f2f7f187")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4cf7ff11d65bbdc684e27ff5099eb41dadf9d47a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Mission12_Elizalde")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Mission12_Elizalde")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
