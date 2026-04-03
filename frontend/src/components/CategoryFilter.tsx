@@ -12,7 +12,7 @@ function CategoryFilter({
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:5210/Book/GetBookTypes');
+        const response = await fetch('https://mission13elizaldebackend-c7grccerdbakd9b9.francecentral-01.azurewebsites.net/Book/GetBookTypes');
         const data = await response.json();
         setCategories(data);
       } catch (error) {
